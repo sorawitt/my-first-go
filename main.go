@@ -1,15 +1,24 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/google/uuid"
-	"github.com/sorawitt/my-first-go/sunwukong"
+	"github.com/gofiber/fiber/v2"
 )
 
+type Book struct {
+	ID     int
+	Name   string
+	Author string
+}
+
+var books []Book
+
 func main() {
-	id := uuid.New()
-	fmt.Println("Hello world")
-	fmt.Printf("UUID: %s", id)
-	sunwukong.SayHelloSunWuKong()
+	app := fiber.New()
+	app.Get("books", handleGetBooks)
+	books = append(books, Book{ID: 1, Name: "kong", Author: "kong"})
+	app.Listen(":8080")
+}
+
+func handleGetBooks(fiber *fiber.Ctx) error {
+	return fiber.Status(200).JSON(books)
 }
